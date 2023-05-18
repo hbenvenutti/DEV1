@@ -8,6 +8,7 @@ import br.ifrs.edu.restinga.domain.model.Cozinha;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 
 @Component
 public class CadastroCozinha {
@@ -22,8 +23,18 @@ public class CadastroCozinha {
         return cozinhas;
     }
 
-    public Cozinha adicionar() {
-        Cozinha cozinha = new Cozinha();
-        cozinha.setNome("Japonesa");
+    @Transactional
+    public Cozinha salvar(Cozinha cozinha) {
+        return manager.merge(cozinha);
+    }
+
+    public Cozinha buscar(Long id) {
+        return manager.find(Cozinha.class, id);
+    }
+
+    @Transactional
+    public void delete(Cozinha cozinha) {
+        Cozinha _cozinha = this.buscar(cozinha.getId());
+        manager.remove(_cozinha);
     }
 }
